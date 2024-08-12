@@ -1,0 +1,7 @@
+discord.py
+slack_sdk
+python-dotenv
+psycopg2-binary
+matplotlib
+japanize-matplotlib
+pytz

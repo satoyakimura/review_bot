@@ -1,0 +1,23 @@
+# Vue.js
+/frontend/*
+!/frontend/src/
+
+# Logs
+logs/
+*.log
+
+# Env
+.env
+
+# FastAPI
+__pycache__/
+*.py[cod]
+*.pyo
+*.env
+
+# OS
+.DS_Store
+
+# other
+.idea/
+.vscode/

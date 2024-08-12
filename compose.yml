@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  bot:
+    build:
+      context: ./bot
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./bot:/bot
+    env_file:
+      - .env
+    depends_on:
+      - db
+    
+
+  db:
+    image: postgres:15.6
+    volumes:
+      - db_store:/var/lib/postgresql/data/
+      - ./db/init:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - 5432:5432
+
+volumes:
+  db_store:
