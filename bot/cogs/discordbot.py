@@ -61,6 +61,25 @@ class DiscordBot(commands.Cog):
                     """, (channel.id, channel.name))
             await self.bot.tree.sync()
         
+
+        @self.bot.event
+        async def on_member_join(member):
+            execute_query("""
+                INSERT INTO userdata (discord_id, username, discriminator) 
+                VALUES (%s, %s, %s) 
+                ON CONFLICT (discord_id) DO UPDATE 
+                SET username = EXCLUDED.username, 
+                discriminator = EXCLUDED.discriminator;
+            """, (member.id, member.name, member.discriminator))
+            
+        @self.bot.event
+        async def on_guild_channel_create(channel):
+            execute_query("""
+                INSERT INTO channel (discord_channel_id, channel_name)
+                VALUES (%s, %s)
+                ON CONFLICT (discord_channel_id) DO NOTHING;
+            """, (channel.id, channel.name))
+
         @self.bot.event
         async def on_voice_state_update(member, before, after):
             now = datetime.now(japan)
@@ -141,7 +160,7 @@ class DiscordBot(commands.Cog):
                 return
 
             usernames = [record['username'] for record in records]
-            total_duration = [round(record['total_duration'].total_seconds() /60, 2) for record in records]
+            total_duration = [round(record['total_duration'].total_seconds() /3600, 2) for record in records]
             plt.figure(figsize=(10, 6))
             plt.bar(usernames, total_duration, color='skyblue')
             plt.xlabel('ユーザー名')
